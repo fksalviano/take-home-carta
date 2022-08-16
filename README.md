@@ -17,25 +17,25 @@ Need to install the follow:
 
 ## Getting Started
 
-### Clone the repository (skip this step if already downloaded the project):
+#### Clone the repository (skip this step if already downloaded the project):
 
 ```bash
 git clone https://github.com/fksalviano/take-home-carta.git
 ```
 
-## Go to the project directory
+#### Go to the project directory
 
 ```bash
 cd take-home-carta
 ```
 
-## Build the project
+#### Build the project
 
 ```bash
 dotnet build
 ```
 
-## Run
+#### Run
 
 ```bash
 dotnet run --project src/Vesting/Worker/
