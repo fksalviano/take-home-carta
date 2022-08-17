@@ -1,6 +1,7 @@
-using Vesting.Worker.Domain;
+using FluentAssertions;
+using Vesting.Application.Commons.Domain;
 
-namespace UnitTest.Worker.Domain
+namespace UnitTest.Application.Domain
 {
     public class InputValidatorTests
     {
@@ -14,11 +15,12 @@ namespace UnitTest.Worker.Domain
             var result = InputValidator.Execute(input);
 
             // Assert
-            Assert.True(result.IsValid);
+            result.IsValid.Should().BeTrue();
         }
 
         [Theory]
         [InlineData("not-found.csv", 1)]
+        [InlineData("", 1)]
         [InlineData("test.csv", -1)]
         [InlineData("test.csv", 7)]
         public void ShouldValidationFail(string fileName, int digits)
@@ -30,7 +32,7 @@ namespace UnitTest.Worker.Domain
             var result = InputValidator.Execute(input);
 
             // Assert
-            Assert.False(result.IsValid);
+            result.IsValid.Should().BeFalse();;
         }
     }
 }

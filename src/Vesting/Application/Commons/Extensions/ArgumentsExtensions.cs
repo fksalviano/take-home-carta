@@ -1,6 +1,6 @@
-using FluentValidation.Results;
+using Vesting.Application.Commons.Domain;
 
-namespace Vesting.Worker.Domain;
+namespace Vesting.Application.Commons.Extensions;
 
 public static class WorkerExtensions
 {
@@ -14,7 +14,7 @@ public static class WorkerExtensions
             throw new ArgumentException("Please inform the the Target Date", nameof(Input.TargetDate));
 
         if (!DateTime.TryParse(args[1], out var targetDate))
-            throw new ArgumentException("Invalid argument Target Date", nameof(Input.TargetDate));
+            throw new ArgumentException($"Invalid argument Target Date: {args[1]} is not a valid date", nameof(Input.TargetDate));
 
         var digits = 0;
         if (args.Count() == 3)
@@ -25,7 +25,4 @@ public static class WorkerExtensions
 
         return new Input(fileName, targetDate, digits);
     }
-
-    public static string ToString(this IEnumerable<ValidationFailure> errors) =>
-        string.Join(", ", errors.Select(error => error.ErrorMessage));
 }

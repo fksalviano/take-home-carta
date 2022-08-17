@@ -1,4 +1,4 @@
-namespace Vesting.Worker.Domain;
+namespace Vesting.Application.Commons.Domain;
 
 public class Input
 {

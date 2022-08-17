@@ -1,6 +1,7 @@
-using Vesting.Worker.Domain;
+using FluentAssertions;
+using Vesting.Application.Commons.Extensions;
 
-namespace UnitTest.Worker.Domain;
+namespace UnitTest.Application.Extensions;
 
 public class WorkerExtensionsTests
 {
@@ -12,7 +13,7 @@ public class WorkerExtensionsTests
         var result = args.TryParseToInput();
 
         // Assert
-        Assert.NotNull(result);
+        result.Should().NotBeNull();
     }
 
     public static object[] ValidArgumentsData() => new object[] 
@@ -25,8 +26,11 @@ public class WorkerExtensionsTests
     [MemberData(nameof(InvalidArgumensData))]
     public void ShouldTryParseToInputFail(string[] args)
     {
+        // Act
+        var action = () => args.TryParseToInput(); 
+
         // Assert
-        Assert.Throws<ArgumentException>(() => args.TryParseToInput());
+        action.Should().Throw<ArgumentException>();
     }
 
     public static object[] InvalidArgumensData() => new object[]

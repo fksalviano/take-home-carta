@@ -1,16 +1,16 @@
 
 using FluentValidation;
-using FluentValidation.Results;
+using Vesting.Application.Commons.Extensions;
 
-namespace Vesting.Worker.Domain
+namespace Vesting.Application.Commons.Domain
 {
     public class InputValidator : AbstractValidator<Input>
     {
         public InputValidator()
         {
             RuleFor(input => input.FileName)
-                .Must(FileExists)
-                .WithMessage("File not exists");
+                .NotNull().NotEmpty().WithMessage("File name is null or empty")
+                .Must(FileExists).WithMessage("File not exists");
 
             RuleFor(input => input.Digits)
                 .InclusiveBetween(0, 6)
@@ -20,10 +20,15 @@ namespace Vesting.Worker.Domain
         private bool FileExists(string fileName)
         {
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), fileName);
+
             return File.Exists(filePath);
         }
 
-        public static ValidationResult Execute(Input input) =>
-            new InputValidator().Validate(input);
+        public static ValidationResult Execute(Input input)
+        {
+            var result = new InputValidator().Validate(input);
+
+            return result.ToDomainResult();
+        }
     }
 }

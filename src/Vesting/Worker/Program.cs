@@ -1,4 +1,6 @@
-﻿using Vesting.Worker.Domain;
+﻿
+using Vesting.Application.Commons.Domain;
+using Vesting.Application.Commons.Extensions;
 
 namespace Vesting.Worker;
 
@@ -14,9 +16,11 @@ class Program
             var validationResult = InputValidator.Execute(input);
             if (!validationResult.IsValid)
             {
-                Console.WriteLine($"Invalid Input: {validationResult.Errors.ToString()}");
+                Console.WriteLine($"Invalid Input: {validationResult.Error}");
                 return;
             }
+
+            // TODO: chamar UseCases ReadFile e GetVested
         }
         catch (Exception ex)
         {
