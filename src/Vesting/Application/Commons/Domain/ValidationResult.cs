@@ -1,4 +1,4 @@
-namespace Vesting.Application.Commons.Domain;
+namespace Application.Commons.Domain;
 
 public class ValidationResult
 {

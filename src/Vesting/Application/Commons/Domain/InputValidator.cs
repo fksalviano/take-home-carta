@@ -1,15 +1,17 @@
 
 using FluentValidation;
-using Vesting.Application.Commons.Extensions;
+using Application.Commons.Extensions;
 
-namespace Vesting.Application.Commons.Domain
+namespace Application.Commons.Domain
 {
     public class InputValidator : AbstractValidator<Input>
     {
         public InputValidator()
         {
             RuleFor(input => input.FileName)
-                .NotNull().NotEmpty().WithMessage("File name is null or empty")
+                .NotNull().NotEmpty().WithMessage("File name is null or empty");
+
+            RuleFor(input => input)
                 .Must(FileExists).WithMessage("File not exists");
 
             RuleFor(input => input.Digits)
@@ -17,17 +19,13 @@ namespace Vesting.Application.Commons.Domain
                 .WithMessage("Digits should be between 0 and 6");
         }
 
-        private bool FileExists(string fileName)
-        {
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), fileName);
-
-            return File.Exists(filePath);
-        }
+        private bool FileExists(Input input) =>
+            File.Exists(input.GetFilePath());
 
         public static ValidationResult Execute(Input input)
         {
             var result = new InputValidator().Validate(input);
-
+            
             return result.ToDomainResult();
         }
     }

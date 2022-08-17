@@ -1,6 +1,6 @@
 using FluentAssertions;
-using Vesting.Application.Commons.Domain;
-using Vesting.Application.Commons.Extensions;
+using Application.Commons.Domain;
+using Application.Commons.Extensions;
 
 namespace UnitTest.Application.Extensions
 {

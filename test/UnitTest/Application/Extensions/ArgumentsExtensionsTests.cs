@@ -1,5 +1,5 @@
 using FluentAssertions;
-using Vesting.Application.Commons.Extensions;
+using Application.Commons.Extensions;
 
 namespace UnitTest.Application.Extensions;
 

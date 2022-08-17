@@ -1,5 +1,5 @@
 using FluentAssertions;
-using Vesting.Application.Commons.Domain;
+using Application.Commons.Domain;
 
 namespace UnitTest.Application.Domain
 {

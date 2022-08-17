@@ -1,30 +1,36 @@
-﻿
-using Vesting.Application.Commons.Domain;
-using Vesting.Application.Commons.Extensions;
+﻿using Application.UseCases.GetVested;
+using Application.UseCases.GetVestedByAward.Abstractions;
+using Application.UseCases.ReadFile;
+using Application.UseCases.ReadFile.Abstractions;
+using Microsoft.Extensions.DependencyInjection;
+using Worker.Abstractions;
 
-namespace Vesting.Worker;
+namespace Worker;
 
 class Program
 {
-    static void Main(string[] args)
+    static async Task Main(string[] args)
     {
+        var services = new ServiceCollection();
+        ConfigureServices(services);
+        
         try
         {
-            var input = args.TryParseToInput();
-            Console.WriteLine($"Starting with arguments {input.ToString()}");
-
-            var validationResult = InputValidator.Execute(input);
-            if (!validationResult.IsValid)
-            {
-                Console.WriteLine($"Invalid Input: {validationResult.Error}");
-                return;
-            }
-
-            // TODO: chamar UseCases ReadFile e GetVested
+            await services.BuildServiceProvider()
+                .GetService<IWorker>()!
+                .Execute(args);
         }
         catch (Exception ex)
         {
             Console.WriteLine($"ERROR: {ex.Message}");
         }
+    }
+
+    public static void ConfigureServices(IServiceCollection services)
+    {
+        services
+            .AddSingleton<IWorker, Worker>()
+            .AddSingleton<IReadFileUseCase, ReadFileUseCase>()
+            .AddSingleton<IGetVestedUseCase, GetVestedUseCase>();
     }
 }

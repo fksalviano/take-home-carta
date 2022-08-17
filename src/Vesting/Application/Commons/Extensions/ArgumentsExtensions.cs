@@ -1,6 +1,6 @@
-using Vesting.Application.Commons.Domain;
+using Application.Commons.Domain;
 
-namespace Vesting.Application.Commons.Extensions;
+namespace Application.Commons.Extensions;
 
 public static class WorkerExtensions
 {
