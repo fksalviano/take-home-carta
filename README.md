@@ -84,3 +84,6 @@ The project uses the following packages
     
 - AutoFixture:
     https://www.nuget.org/packages/autofixture
+    
+- Moq.AutoMock:
+    https://www.nuget.org/packages/moq.automock
