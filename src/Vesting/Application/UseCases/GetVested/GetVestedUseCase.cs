@@ -17,10 +17,6 @@ public class GetVestedUseCase : IGetVestedUseCase
 
     public async Task Execute(GetVestedInput input)
     {
-        var vestingEvents = input.VestingEvents
-            .Where(vesting => vesting.Date <= input.Date)
-            .ToList();  
-
         var vestedSchedules = input.VestingEvents
             .GroupBy(vesting => new 
             { 
