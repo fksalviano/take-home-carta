@@ -81,3 +81,6 @@ The project uses the following packages
     
 - XUnit:
     https://www.nuget.org/packages/xunit
+    
+- AutoFixture:
+    https://www.nuget.org/packages/autofixture
