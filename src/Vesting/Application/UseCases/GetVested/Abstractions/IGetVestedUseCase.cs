@@ -1,4 +1,3 @@
-using Application.Commons.Domain;
 using Application.UseCases.GetVested.Abstractions;
 using Application.UseCases.GetVested.Ports;
 

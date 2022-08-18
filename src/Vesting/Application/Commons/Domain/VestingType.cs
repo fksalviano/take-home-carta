@@ -1,13 +1,12 @@
 using System.ComponentModel;
 
-namespace Application.Commons.Domain
-{
-    public enum VestingType
-    {
-        [Description("VEST")]
-        VEST,
+namespace Application.Commons.Domain;
 
-        [Description("CANCEL")]
-        CANCEL
-    }
+public enum VestingType
+{
+    [Description("VEST")]
+    VEST,
+
+    [Description("CANCEL")]
+    CANCEL
 }

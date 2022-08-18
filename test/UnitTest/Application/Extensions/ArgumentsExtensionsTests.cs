@@ -7,7 +7,7 @@ public class WorkerExtensionsTests
 {
     [Theory]
     [MemberData(nameof(ValidArgumentsData))]
-    public void ShouldTryParseToInputSuccess(string[] args)
+    public void ShouldTryParseToInputSuccessfully(string[] args)
     {
         // Act
         var result = args.TryParseToInput();

@@ -7,14 +7,14 @@ using Application.UseCases.GetVestedByAward.Abstractions;
 using Application.UseCases.ReadFile.Abstractions;
 using Worker.Abstractions;
 
-namespace Worker;
+namespace Worker.Workers;
 
-public class Worker : IWorker, IGetVestedOutputPort 
+public class VestingWorker : IWorker, IGetVestedOutputPort 
 {
     private readonly IReadFileUseCase _readFileUseCase;
     private readonly IGetVestedUseCase _getVestedUseCase;
     
-    public Worker(IReadFileUseCase readFileUseCase, IGetVestedUseCase getVestedUseCase)
+    public VestingWorker(IReadFileUseCase readFileUseCase, IGetVestedUseCase getVestedUseCase)
     {
         _readFileUseCase = readFileUseCase;
 
@@ -25,8 +25,7 @@ public class Worker : IWorker, IGetVestedOutputPort
     public async Task Execute(string[] args)
     {
         var input = args.TryParseToInput();
-        Console.WriteLine($"Starting with arguments {input.ToString()}");
-
+        
         if (!IsValidInput(input))
             return;
 
@@ -44,7 +43,7 @@ public class Worker : IWorker, IGetVestedOutputPort
 
     void IGetVestedOutputPort.Ok(GetVestedOutput output)
     {
-        foreach (var line in output.VestedShedules.ToCSV())
+        foreach (var line in output.VestedShedules.ToCSV(output.Digits))
             Console.WriteLine(line);
     }
 

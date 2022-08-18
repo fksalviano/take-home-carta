@@ -6,7 +6,7 @@ namespace UnitTest.Application.Domain
     public class InputValidatorTests
     {
         [Fact]
-        public void ShouldValidateSuccess()
+        public void ShouldValidateSuccessfully()
         {
             // Arrange
             var input = new Input("test.csv", DateTime.Now, 1);

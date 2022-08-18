@@ -4,6 +4,7 @@ using Application.UseCases.ReadFile;
 using Application.UseCases.ReadFile.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 using Worker.Abstractions;
+using Worker.Workers;
 
 namespace Worker;
 
@@ -13,7 +14,6 @@ class Program
     {
         var services = new ServiceCollection();
         ConfigureServices(services);
-        
         try
         {
             await services.BuildServiceProvider()
@@ -29,7 +29,7 @@ class Program
     public static void ConfigureServices(IServiceCollection services)
     {
         services
-            .AddSingleton<IWorker, Worker>()
+            .AddSingleton<IWorker, VestingWorker>()
             .AddSingleton<IReadFileUseCase, ReadFileUseCase>()
             .AddSingleton<IGetVestedUseCase, GetVestedUseCase>();
     }

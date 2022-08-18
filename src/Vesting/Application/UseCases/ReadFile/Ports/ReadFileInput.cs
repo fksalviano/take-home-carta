@@ -9,5 +9,5 @@ public class ReadFileInput
     }
 
     public string FileName { get; }
-    public int Digits { get; set; }   
+    public int Digits { get; }   
 }
