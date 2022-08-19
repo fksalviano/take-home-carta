@@ -11,6 +11,9 @@ public static class FileUtil
         
         while (!reader.EndOfStream)
         {
+            if (cancellationToken.IsCancellationRequested)
+                break; 
+
             lineNumber ++;
             var line = await reader.ReadLineAsync();
             
