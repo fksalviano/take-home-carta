@@ -17,20 +17,22 @@ public class GetVestedUseCase : IGetVestedUseCase
 
     public async Task Execute(GetVestedInput input, CancellationToken cancellationToken)
     {
-        var vestedSchedules = input.VestingEvents
-            .GroupBy(vesting => new 
-            { 
-                vesting.EmployeeId, 
-                vesting.EmployeeName,
-                vesting.AwardId
-            })
-            .Select(group => new VestedShedule
-            {
-                EmployeeId = group.Key.EmployeeId,
-                EmployeeName = group.Key.EmployeeName,
-                AwardId = group.Key.AwardId,
-                Quantity = SumQuantity(group.ToList(), input.Date)  
-            });
+        var vestedSchedules = await Task.Run(() => 
+            input.VestingEvents
+                .GroupBy(vesting => new 
+                        { 
+                            vesting.EmployeeId, 
+                            vesting.EmployeeName,
+                            vesting.AwardId
+                        })
+                .Select(group => new VestedShedule
+                {
+                    EmployeeId = group.Key.EmployeeId,
+                    EmployeeName = group.Key.EmployeeName,
+                    AwardId = group.Key.AwardId,
+                    Quantity = SumQuantity(group.ToList(), input.Date)  
+                })
+        );
 
         if (!vestedSchedules.Any())
         {
@@ -38,9 +40,8 @@ public class GetVestedUseCase : IGetVestedUseCase
             return;
         }
 
-        var output = vestedSchedules.ToOutput(input.Digits);
-        
-        await Task.Run(() => _outputPort!.Ok(output));
+        var output = vestedSchedules.ToOutput(input.Digits); 
+        _outputPort!.Ok(output);
     }
 
     private decimal SumQuantity(IEnumerable<VestingEvent> vestingEvents, DateTime date)
