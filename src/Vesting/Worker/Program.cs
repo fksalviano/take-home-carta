@@ -16,14 +16,34 @@ class Program
         ConfigureServices(services);
         try
         {
+            var cancellationToken = GetCancellationToken();
+
             await services.BuildServiceProvider()
                 .GetService<IWorker>()!
-                .Execute(args);
+                .Execute(args, cancellationToken);
+
+            Environment.ExitCode = 0;
         }
         catch (Exception ex)
         {
             Console.WriteLine($"ERROR: {ex.Message}");
+            Environment.ExitCode = 1;
         }
+    }
+
+    private static CancellationToken GetCancellationToken()
+    {
+        var source = new CancellationTokenSource();
+
+        Console.CancelKeyPress += (sender, eventArgs) =>
+        {
+            Console.WriteLine("Cancelling...");
+            source.Cancel();
+            eventArgs.Cancel = true;
+            Environment.Exit(-1);
+        };
+
+        return source.Token;
     }
 
     public static void ConfigureServices(IServiceCollection services)

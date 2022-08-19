@@ -15,7 +15,7 @@ public class GetVestedUseCase : IGetVestedUseCase
     public void SetOutputPort(IGetVestedOutputPort outputPort) =>
         _outputPort = outputPort;
 
-    public async Task Execute(GetVestedInput input)
+    public async Task Execute(GetVestedInput input, CancellationToken cancellationToken)
     {
         var vestedSchedules = input.VestingEvents
             .GroupBy(vesting => new 

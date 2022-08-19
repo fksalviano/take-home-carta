@@ -2,7 +2,7 @@ using Application.Commons.Domain;
 
 namespace Application.UseCases.GetVested.Ports;
 
-public class GetVestedInput
+public struct GetVestedInput
 {
     public GetVestedInput(IEnumerable<VestingEvent> vestingEvents, DateTime date, int digits)
     {
@@ -14,6 +14,5 @@ public class GetVestedInput
     public IEnumerable<VestingEvent> VestingEvents { get; }
 
     public DateTime Date { get; }
-
     public int Digits { get; }
 }

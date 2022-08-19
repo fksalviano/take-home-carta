@@ -4,5 +4,5 @@ namespace Application.UseCases.ReadFile.Abstractions;
 
 public interface IReadFileUseCase
 {
-    Task<ReadFileOutput> Execute(ReadFileInput input);    
+    Task<ReadFileOutput> Execute(ReadFileInput input, CancellationToken cancellationToken);    
 }

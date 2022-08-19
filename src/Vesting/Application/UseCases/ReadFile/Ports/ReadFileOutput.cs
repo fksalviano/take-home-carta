@@ -2,7 +2,7 @@ using Application.Commons.Domain;
 
 namespace Application.UseCases.ReadFile.Ports;
 
-public class ReadFileOutput
+public struct ReadFileOutput
 {
     public ReadFileOutput(IEnumerable<VestingEvent> vestingEvents)
     {

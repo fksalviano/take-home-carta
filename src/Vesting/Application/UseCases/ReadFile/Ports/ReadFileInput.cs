@@ -1,6 +1,6 @@
 namespace Application.UseCases.ReadFile.Ports;
 
-public class ReadFileInput
+public struct ReadFileInput
 {
     public ReadFileInput(string fileName, int digits)
     {

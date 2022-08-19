@@ -2,7 +2,7 @@ using Application.UseCases.GetVested.Domain;
 
 namespace Application.UseCases.GetVested.Ports;
 
-public class GetVestedOutput
+public struct GetVestedOutput
 {
     public GetVestedOutput(IEnumerable<VestedShedule> vestedShedules, int digits)
     {
@@ -11,6 +11,5 @@ public class GetVestedOutput
     }
 
     public IEnumerable<VestedShedule> VestedShedules { get; }
-
     public int Digits { get; }
 }

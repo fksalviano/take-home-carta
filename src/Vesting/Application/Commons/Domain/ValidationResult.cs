@@ -1,6 +1,6 @@
 namespace Application.Commons.Domain;
 
-public class ValidationResult
+public struct ValidationResult
 {
     public ValidationResult(bool isValid, string error)
     {

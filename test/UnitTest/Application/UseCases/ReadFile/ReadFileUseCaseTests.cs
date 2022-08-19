@@ -26,7 +26,7 @@ public class ReadFileUseCaseTests
         var input = new ReadFileInput("test.csv", 1);
 
         // Act
-        var result = await _sut.Execute(input);
+        var result = await _sut.Execute(input, CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();
@@ -41,7 +41,7 @@ public class ReadFileUseCaseTests
         var input = new ReadFileInput("test.csv", invalidDigits);
 
         // Act
-        var action = () => _sut.Execute(input);
+        var action = () => _sut.Execute(input, CancellationToken.None);
 
         // Assert
         await action.Should().ThrowAsync<InvalidDataException>();

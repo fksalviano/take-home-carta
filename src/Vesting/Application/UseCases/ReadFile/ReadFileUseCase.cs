@@ -1,4 +1,5 @@
 using Application.Commons.Domain;
+using Application.Commons.Utils;
 using Application.UseCases.ReadFile.Abstractions;
 using Application.UseCases.ReadFile.Extensions;
 using Application.UseCases.ReadFile.Ports;
@@ -8,50 +9,50 @@ namespace Application.UseCases.ReadFile;
 
 public class ReadFileUseCase : IReadFileUseCase
 {
-    public async Task<ReadFileOutput> Execute(ReadFileInput input)
+    public async Task<ReadFileOutput> Execute(ReadFileInput input, CancellationToken cancellationToken)
     {
-        var vestingEvents = new List<VestingEvent>();
-
-        var lineNumber = 0;
-        var reader = new StreamReader(File.OpenRead(input.FileName));
-
-        while (!reader.EndOfStream)
-        {
-            lineNumber ++;
-            var line = await reader.ReadLineAsync();
-            
-            if (!string.IsNullOrEmpty(line))
+        var vestingEvents = await FileUtil
+            .ReadAllLines(input.FileName, cancellationToken, (lineValues, lineNumber) => 
             {
-                var values = line.Split(",");
-                try
-                {
-                    var vestingEvent = new VestingEvent
-                    {
-                        Type = Enum.Parse<VestingType>(values[0]),
-                        EmployeeId = values[1],
-                        EmployeeName = values[2], 
-                        AwardId = values[3],
-                        Date = DateTime.Parse(values[4]),
-                        Quantity = ParseQuantity(values[5], input.Digits) 
-                    };
-                    
-                    vestingEvents.Add(vestingEvent);
-                }
-                catch (Exception ex)
-                {
-                    throw new InvalidDataException($"ERROR READING FILE - Line {lineNumber}: {ex.Message}", ex);
-                }
-            }
-        }
+                var vestingEvent = TryParseLine(lineValues, input.Digits, 
+                    out var parseError);
+
+                if (parseError is not null)
+                    throw new InvalidDataException(
+                        $"ERROR READING FILE - Line {lineNumber}: {parseError.Message}", parseError);
+
+                return vestingEvent!;
+            });
 
         return vestingEvents.ToOutput();
+    }
+
+    private VestingEvent? TryParseLine(string[] lineValues, int digits, out Exception? error)
+    {
+        error = null;
+        try
+        {
+            return new VestingEvent
+            {
+                Type = Enum.Parse<VestingType>(lineValues[0]),
+                EmployeeId = lineValues[1],
+                EmployeeName = lineValues[2], 
+                AwardId = lineValues[3],
+                Date = DateTime.Parse(lineValues[4]),
+                Quantity = ParseQuantity(lineValues[5], digits) 
+            };
+        }
+        catch (Exception ex)
+        {
+            error = ex;
+            return null;
+        }
     }
 
     private decimal ParseQuantity(string quantity, int digits)
     {
         var parsed = decimal.Parse(quantity, NumberStyles.Number, CultureInfo.InvariantCulture);
-        var result = Math.Round(parsed, digits, MidpointRounding.ToZero);
-
-        return result;
+        
+        return Math.Round(parsed, digits, MidpointRounding.ToZero);
     }
 }

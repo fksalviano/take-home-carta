@@ -37,7 +37,7 @@ public class GetVestedUseCaseTests
         var input = new GetVestedInput(vestingEvents, date, 0);
 
         // Act
-        await _sut.Execute(input);
+        await _sut.Execute(input, CancellationToken.None);
 
         // Assert 
         _outputPort.Verify(output => 
@@ -55,7 +55,7 @@ public class GetVestedUseCaseTests
         var input = new GetVestedInput(vestingEvents, DateTime.MinValue, 0);
 
         // Act
-        await _sut.Execute(input);
+        await _sut.Execute(input, CancellationToken.None);
 
         // Assert 
         _outputPort.Verify(output => output.NotFound(), Times.Once);

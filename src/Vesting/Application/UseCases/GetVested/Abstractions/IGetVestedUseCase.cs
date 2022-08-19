@@ -5,7 +5,7 @@ namespace Application.UseCases.GetVestedByAward.Abstractions;
 
 public interface IGetVestedUseCase
 {
-    Task Execute(GetVestedInput input);
+    Task Execute(GetVestedInput input, CancellationToken cancellationToken);
 
     void SetOutputPort(IGetVestedOutputPort outputPort);
 }

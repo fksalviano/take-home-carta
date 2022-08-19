@@ -1,6 +1,6 @@
 namespace Application.Commons.Domain;
 
-public class Input
+public struct Input
 {
     public Input(string fileName, DateTime targetDate, int digits = 0)
     {
@@ -13,8 +13,9 @@ public class Input
     public DateTime TargetDate { get; }
     public int Digits { get; }
 
-    public override string ToString() => string.Join(", ", 
-        $"{nameof(FileName)}: {FileName}",
-        $"{nameof(TargetDate)}: {TargetDate.ToShortDateString()}",
-        $"{nameof(Digits)}: {Digits}");
+    public override string ToString() => 
+        string.Join(", ", 
+            $"{nameof(FileName)}: {FileName}",
+            $"{nameof(TargetDate)}: {TargetDate.ToShortDateString()}",
+            $"{nameof(Digits)}: {Digits}");
 }
