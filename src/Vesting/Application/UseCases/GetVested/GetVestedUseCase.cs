@@ -20,11 +20,11 @@ public class GetVestedUseCase : IGetVestedUseCase
         var vestedSchedules = await Task.Run(() => 
             input.VestingEvents
                 .GroupBy(vesting => new 
-                        { 
-                            vesting.EmployeeId, 
-                            vesting.EmployeeName,
-                            vesting.AwardId
-                        })
+                { 
+                    vesting.EmployeeId, 
+                    vesting.EmployeeName,
+                    vesting.AwardId
+                })
                 .Select(group => new VestedShedule
                 {
                     EmployeeId = group.Key.EmployeeId,
