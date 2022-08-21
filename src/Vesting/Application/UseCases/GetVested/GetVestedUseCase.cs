@@ -3,7 +3,6 @@ using Application.UseCases.GetVested.Abstractions;
 using Application.UseCases.GetVested.Domain;
 using Application.UseCases.GetVested.Extensions;
 using Application.UseCases.GetVested.Ports;
-using Application.UseCases.GetVestedByAward.Abstractions;
 using static Application.Commons.Domain.VestingType;
 
 namespace Application.UseCases.GetVested;

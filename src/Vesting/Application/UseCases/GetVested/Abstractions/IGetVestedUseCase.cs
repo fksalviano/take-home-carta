@@ -1,7 +1,7 @@
 using Application.UseCases.GetVested.Abstractions;
 using Application.UseCases.GetVested.Ports;
 
-namespace Application.UseCases.GetVestedByAward.Abstractions;
+namespace Application.UseCases.GetVested.Abstractions;
 
 public interface IGetVestedUseCase
 {

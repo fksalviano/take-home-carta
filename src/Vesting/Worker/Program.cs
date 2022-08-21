@@ -1,10 +1,6 @@
-﻿using Application.UseCases.GetVested;
-using Application.UseCases.GetVestedByAward.Abstractions;
-using Application.UseCases.ReadFile;
-using Application.UseCases.ReadFile.Abstractions;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Worker.Abstractions;
-using Worker.Workers;
+using Worker.Extensions;
 
 namespace Worker;
 
@@ -13,7 +9,7 @@ class Program
     static async Task Main(string[] args)
     {
         var services = new ServiceCollection();
-        ConfigureServices(services);
+        services.ConfigureServices();
         try
         {
             var cancellationToken = GetCancellationToken();
@@ -33,24 +29,16 @@ class Program
 
     private static CancellationToken GetCancellationToken()
     {
-        var source = new CancellationTokenSource();
+        var cancellationSource = new CancellationTokenSource();
 
         Console.CancelKeyPress += (sender, eventArgs) =>
         {
             Console.WriteLine("Cancelling...");
-            source.Cancel();
+            cancellationSource.Cancel();
             eventArgs.Cancel = true;
             Environment.Exit(-1);
         };
 
-        return source.Token;
-    }
-
-    public static void ConfigureServices(IServiceCollection services)
-    {
-        services
-            .AddSingleton<IWorker, VestingWorker>()
-            .AddSingleton<IReadFileUseCase, ReadFileUseCase>()
-            .AddSingleton<IGetVestedUseCase, GetVestedUseCase>();
+        return cancellationSource.Token;
     }
 }
