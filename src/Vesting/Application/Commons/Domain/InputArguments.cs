@@ -1,8 +1,8 @@
 namespace Application.Commons.Domain;
 
-public struct Input
+public struct InputArguments
 {
-    public Input(string fileName, DateTime targetDate, int digits = 0)
+    public InputArguments(string fileName, DateTime targetDate, int digits = 0)
     {
         FileName = fileName;
         TargetDate = targetDate;

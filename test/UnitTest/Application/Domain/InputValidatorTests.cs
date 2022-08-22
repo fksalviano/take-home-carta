@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Application.Commons.Domain;
+using Application.Commons.Domain.Validators;
 
 namespace UnitTest.Application.Domain
 {
@@ -9,7 +10,7 @@ namespace UnitTest.Application.Domain
         public void ShouldValidateSuccessfully()
         {
             // Arrange
-            var input = new Input("test.csv", DateTime.Now, 1);
+            var input = new InputArguments("test.csv", DateTime.Now, 1);
 
             // Act
             var result = InputValidator.Execute(input);
@@ -26,7 +27,7 @@ namespace UnitTest.Application.Domain
         public void ShouldValidationFail(string fileName, int digits)
         {
             // Arrange
-            var input = new Input(fileName, DateTime.Now, digits);
+            var input = new InputArguments(fileName, DateTime.Now, digits);
         
             // Act
             var result = InputValidator.Execute(input);

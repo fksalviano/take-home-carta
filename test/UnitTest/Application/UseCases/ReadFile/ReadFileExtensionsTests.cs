@@ -20,6 +20,6 @@ public class ReadFileExtensionsTests
 
         // Assert
         result.Should().NotBeNull();
-        result.VestingEvents.Should().NotBeNullOrEmpty();
+        result.Should().NotBeNullOrEmpty();
     }
 }

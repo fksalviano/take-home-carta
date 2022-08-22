@@ -1,8 +1,8 @@
 using Application.Commons.Domain;
-using Application.Commons.Utils;
 using Application.UseCases.ReadFile.Abstractions;
 using Application.UseCases.ReadFile.Extensions;
 using Application.UseCases.ReadFile.Ports;
+using Application.UseCases.ReadFile.Utils;
 using static System.Globalization.NumberStyles;
 using static System.Globalization.CultureInfo;
 
@@ -10,9 +10,9 @@ namespace Application.UseCases.ReadFile;
 
 public class ReadFileUseCase : IReadFileUseCase
 {
-    public async Task<ReadFileOutput> Execute(ReadFileInput input, CancellationToken cancellationToken)
+    public async Task<ReadFileOutput> ExecuteAsync(ReadFileInput input, CancellationToken cancellationToken)
     {
-        var vestingEvents = await FileUtil.ReadAllLines(input.FileName, cancellationToken, 
+        var vestingEvents = await FileUtil.ReadAllLinesAsync(input.FileName, cancellationToken, 
             (lineValues) => new VestingEvent
             {
                 Type = Enum.Parse<VestingType>(lineValues[0]),

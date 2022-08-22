@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Application.Commons.Domain;
+using Application.Commons.Domain.Validators;
 using Application.Commons.Extensions;
 
 namespace UnitTest.Application.Extensions
@@ -22,7 +23,7 @@ namespace UnitTest.Application.Extensions
             result.Error.Should().Be(string.Join(", ", sut.Errors.Select(_ => _.ErrorMessage)));
         }
 
-        private static Input GetInvalidInput() =>
-            new Input(string.Empty, DateTime.Now);
+        private static InputArguments GetInvalidInput() =>
+            new InputArguments(string.Empty, DateTime.Now);
     }
 }

@@ -1,4 +1,4 @@
-namespace Application.Commons.Domain;
+namespace Application.Commons.Domain.Validators;
 
 public struct ValidationResult
 {

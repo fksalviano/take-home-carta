@@ -1,10 +1,9 @@
-
 using FluentValidation;
 using Application.Commons.Extensions;
 
-namespace Application.Commons.Domain;
+namespace Application.Commons.Domain.Validators;
 
-public class InputValidator : AbstractValidator<Input>
+public class InputValidator : AbstractValidator<InputArguments>
 {
     public InputValidator()
     {
@@ -19,13 +18,12 @@ public class InputValidator : AbstractValidator<Input>
             .WithMessage("Digits should be between 0 and 6");
     }
 
-    private bool FileExists(Input input) =>
+    private bool FileExists(InputArguments input) =>
         File.Exists(input.GetFilePath());
 
-    public static ValidationResult Execute(Input input)
+    public static ValidationResult Execute(InputArguments input)
     {
         var result = new InputValidator().Validate(input);
-        
         return result.ToDomainResult();
     }
 }

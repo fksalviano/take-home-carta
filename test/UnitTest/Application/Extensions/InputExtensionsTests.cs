@@ -13,7 +13,7 @@ public class InputExtensionsTests
     public void ShouldConvertToReadFileInput()
     {
         // Arrange
-        var input = _fixture.Create<Input>();
+        var input = _fixture.Create<InputArguments>();
 
         // Act
         var result = input.ToReadFileInput();

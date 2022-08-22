@@ -6,17 +6,17 @@ namespace Application.Commons.Extensions;
 
 public static class InputExtensions
 {
-    public static ReadFileInput ToReadFileInput(this Input input) =>
+    public static ReadFileInput ToReadFileInput(this InputArguments input) =>
         new ReadFileInput(
             input.GetFilePath(), 
             input.Digits);
 
-    public static GetVestedInput ToGetVestedInput(this Input input, ReadFileOutput fileOutput) =>
+    public static GetVestedInput ToGetVestedInput(this InputArguments input, ReadFileOutput fileOutput) =>
         new GetVestedInput(
-            fileOutput.VestingEvents, 
+            fileOutput, 
             input.TargetDate, 
             input.Digits);
 
-    public static string GetFilePath(this Input input) =>
+    public static string GetFilePath(this InputArguments input) =>
         Path.Combine(Directory.GetCurrentDirectory(), input.FileName);
 }

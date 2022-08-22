@@ -1,4 +1,4 @@
-using Application.Commons.Domain;
+using Application.Commons.Domain.Validators;
 using Application.Commons.Extensions;
 using Application.UseCases.GetVested.Abstractions;
 using Application.UseCases.GetVested.Extensions;
@@ -23,7 +23,7 @@ public class VestingWorker : IWorker, IGetVestedOutputPort
         _getVestedUseCase.SetOutputPort(this);
     }
 
-    public async Task Execute(string[] args, CancellationToken cancellationToken)
+    public async Task ExecuteAsync(string[] args, CancellationToken cancellationToken)
     {
         var input = args.TryParseToInput();
 
@@ -35,10 +35,10 @@ public class VestingWorker : IWorker, IGetVestedOutputPort
         }
 
         var readFileInput = input.ToReadFileInput();
-        var fileOutput = await _readFileUseCase.Execute(readFileInput, cancellationToken);
+        var fileOutput = await _readFileUseCase.ExecuteAsync(readFileInput, cancellationToken);
 
         var getVestedInput = input.ToGetVestedInput(fileOutput);
-        await _getVestedUseCase.Execute(getVestedInput, cancellationToken);
+        await _getVestedUseCase.ExecuteAsync(getVestedInput, cancellationToken);
     }
 
     void IGetVestedOutputPort.Ok(GetVestedOutput output) =>

@@ -1,13 +1,18 @@
+using System.Collections;
 using Application.Commons.Domain;
 
 namespace Application.UseCases.ReadFile.Ports;
 
-public struct ReadFileOutput
+public struct ReadFileOutput : IEnumerable<VestingEvent>
 {
-    public ReadFileOutput(IEnumerable<VestingEvent> vestingEvents)
-    {
-        VestingEvents = vestingEvents;
-    }
+    public ReadFileOutput(IEnumerable<VestingEvent> vestingEvents) =>
+        _vestingEvents = vestingEvents;
 
-    public IEnumerable<VestingEvent> VestingEvents { get; }
+    private IEnumerable<VestingEvent> _vestingEvents;
+
+    public IEnumerator<VestingEvent> GetEnumerator() =>
+        _vestingEvents.GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator() =>
+        this.GetEnumerator();
 }

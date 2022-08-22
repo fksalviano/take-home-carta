@@ -17,7 +17,7 @@ class Program
             var cancellationSource = new CancellationTokenSource();
             cancellationSource.ConfigureCancelEvent(ConsoleCancel);
 
-            await worker.Execute(args, cancellationSource.Token);
+            await worker.ExecuteAsync(args, cancellationSource.Token);
         }
         catch (Exception ex)
         {
