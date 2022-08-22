@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Worker.Abstractions;
+﻿using Worker.Abstractions;
 using Worker.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Worker;
 
@@ -10,15 +10,14 @@ class Program
     {
         var services = new ServiceCollection();
         services.ConfigureServices();
+
+        var worker = services.GetService<IWorker>();
         try
         {
-            var cancellationToken = GetCancellationToken();
+            var cancellationSource = new CancellationTokenSource();
+            cancellationSource.ConfigureCancelEvent(ConsoleCancel);
 
-            await services.BuildServiceProvider()
-                .GetService<IWorker>()!
-                .Execute(args, cancellationToken);
-
-            Environment.ExitCode = 0;
+            await worker.Execute(args, cancellationSource.Token);
         }
         catch (Exception ex)
         {
@@ -27,18 +26,9 @@ class Program
         }
     }
 
-    private static CancellationToken GetCancellationToken()
+    private static void ConsoleCancel()
     {
-        var cancellationSource = new CancellationTokenSource();
-
-        Console.CancelKeyPress += (sender, eventArgs) =>
-        {
-            Console.WriteLine("Cancelling...");
-            cancellationSource.Cancel();
-            eventArgs.Cancel = true;
-            Environment.Exit(-1);
-        };
-
-        return cancellationSource.Token;
+        Console.WriteLine("Cancelling...");
+        Environment.Exit(-1);
     }
 }

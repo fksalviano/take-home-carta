@@ -2,7 +2,6 @@ using Application.Commons.Domain;
 using Application.UseCases.GetVested;
 using Application.UseCases.GetVested.Abstractions;
 using Application.UseCases.GetVested.Ports;
-using Application.UseCases.GetVestedByAward.Abstractions;
 using AutoFixture;
 using Moq;
 using Moq.AutoMock;

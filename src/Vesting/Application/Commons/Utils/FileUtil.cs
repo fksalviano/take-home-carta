@@ -1,5 +1,3 @@
-using System.Linq.Expressions;
-
 namespace Application.Commons.Utils;
 
 public static class FileUtil
@@ -16,7 +14,7 @@ public static class FileUtil
         try
         {
             if (cancellationToken.IsCancellationRequested)
-                break; 
+                break;
 
             lineNumber ++;
             var line = await reader.ReadLineAsync();

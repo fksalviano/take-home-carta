@@ -42,7 +42,8 @@ public class VestingWorker : IWorker, IGetVestedOutputPort
     }
 
     void IGetVestedOutputPort.Ok(GetVestedOutput output) =>
-        _outputPort.Ok(output.VestedShedules.ToCSV(output.Digits));
+        _outputPort.Ok(output.VestedShedules
+            .ToCSV(output.Digits));
 
     void IGetVestedOutputPort.NotFound() =>
         _outputPort.NotFound();

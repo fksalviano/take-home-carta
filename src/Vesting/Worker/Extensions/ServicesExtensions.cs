@@ -18,4 +18,8 @@ public static class ServicesExtensions
             .AddSingleton<IReadFileUseCase, ReadFileUseCase>()
             .AddSingleton<IGetVestedUseCase, GetVestedUseCase>();
 
+
+    public static T GetService<T>(this IServiceCollection services) =>
+        services.BuildServiceProvider().GetService<T>()!;
+
 }
