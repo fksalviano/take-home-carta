@@ -12,10 +12,4 @@ public struct InputArguments
     public string FileName { get; }
     public DateTime TargetDate { get; }
     public int Digits { get; }
-
-    public override string ToString() => 
-        string.Join(", ", 
-            $"{nameof(FileName)}: {FileName}",
-            $"{nameof(TargetDate)}: {TargetDate.ToShortDateString()}",
-            $"{nameof(Digits)}: {Digits}");
 }

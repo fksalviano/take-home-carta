@@ -14,7 +14,8 @@ public class VestingWorker : IWorker, IGetVestedOutputPort
     private readonly IGetVestedUseCase _getVestedUseCase;
     private readonly IWorkerOutputPort _outputPort;
 
-    public VestingWorker(IReadFileUseCase readFileUseCase, IGetVestedUseCase getVestedUseCase, IWorkerOutputPort outputPort)
+    public VestingWorker(IReadFileUseCase readFileUseCase, IGetVestedUseCase getVestedUseCase, 
+        IWorkerOutputPort outputPort)
     {
         _outputPort = outputPort;
         _readFileUseCase = readFileUseCase;
@@ -42,8 +43,7 @@ public class VestingWorker : IWorker, IGetVestedOutputPort
     }
 
     void IGetVestedOutputPort.Ok(GetVestedOutput output) =>
-        _outputPort.Ok(output.VestedShedules
-            .ToCSV(output.Digits));
+        _outputPort.Ok(output.ToCSV());
 
     void IGetVestedOutputPort.NotFound() =>
         _outputPort.NotFound();

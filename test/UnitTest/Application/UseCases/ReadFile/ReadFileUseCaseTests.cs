@@ -1,3 +1,5 @@
+using System.Collections;
+using Application.Commons.Domain;
 using Application.UseCases.ReadFile;
 using Application.UseCases.ReadFile.Abstractions;
 using Application.UseCases.ReadFile.Ports;
@@ -28,9 +30,13 @@ public class ReadFileUseCaseTests
         // Act
         var result = await _sut.ExecuteAsync(input, CancellationToken.None);
 
+        var resultEnumerator = (result as IEnumerable).GetEnumerator(); 
+
         // Assert
         result.Should().NotBeNull();
         result.Should().NotBeNullOrEmpty();
+        resultEnumerator.Should().NotBeNull();
+
     }
 
     [Fact]

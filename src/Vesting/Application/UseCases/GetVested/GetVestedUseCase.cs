@@ -24,7 +24,7 @@ public class GetVestedUseCase : IGetVestedUseCase
                     vesting.EmployeeName,
                     vesting.AwardId
                 })
-                .Select(group => new VestedShedule
+                .Select(group => new VestedSchedule
                 {
                     EmployeeId = group.Key.EmployeeId,
                     EmployeeName = group.Key.EmployeeName,
@@ -46,7 +46,7 @@ public class GetVestedUseCase : IGetVestedUseCase
     private decimal SumQuantity(IEnumerable<VestingEvent> vestingEvents, DateTime date)
     {
         var eventsByDate = vestingEvents.Where(vesting => vesting.Date <= date);
-        
+
         return SumByType(VEST, eventsByDate) - SumByType(CANCEL, eventsByDate);
     }
 

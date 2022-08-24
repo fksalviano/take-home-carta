@@ -1,6 +1,7 @@
 using Application.Commons.Domain;
 using Application.UseCases.GetVested.Domain;
 using Application.UseCases.GetVested.Extensions;
+using Application.UseCases.GetVested.Ports;
 using AutoFixture;
 using FluentAssertions;
 
@@ -15,14 +16,14 @@ public class GetVestedExtensionsTests
     {
         // Arrange
         var digits = 1;
-        var vestedSchedules = _fixture.Build<VestedShedule>().CreateMany(1);
+        var vestedSchedules = _fixture.Build<VestedSchedule>().CreateMany(1);
         
         // Act
         var result = vestedSchedules.ToOutput(digits);
 
         // Assert
         result.Should().NotBeNull();
-        result.VestedShedules.Should().NotBeNullOrEmpty();
+        result.VestedSchedules.Should().NotBeNullOrEmpty();
     }
 
     [Fact]
@@ -30,10 +31,10 @@ public class GetVestedExtensionsTests
     {
         // Arrange
         var digits = 1;
-        var vestedSchedules = _fixture.Build<VestedShedule>().CreateMany(1);
+        var output = new GetVestedOutput(_fixture.Build<VestedSchedule>().CreateMany(1), digits);
         
         // Act
-        var result = vestedSchedules.ToCSV(digits);
+        var result = output.ToCSV();
 
         // Assert
         result.Should().NotBeNullOrEmpty();

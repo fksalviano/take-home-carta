@@ -6,9 +6,11 @@ using Worker.Abstractions;
 using Worker.Workers;
 using Microsoft.Extensions.DependencyInjection;
 using Worker.Ports;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Worker.Extensions;
 
+[ExcludeFromCodeCoverage]
 public static class ServicesExtensions
 {
     public static void ConfigureServices(this IServiceCollection services) =>
@@ -21,5 +23,4 @@ public static class ServicesExtensions
 
     public static T GetService<T>(this IServiceCollection services) =>
         services.BuildServiceProvider().GetService<T>()!;
-
 }

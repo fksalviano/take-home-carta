@@ -1,9 +1,11 @@
 ﻿using Worker.Abstractions;
 using Worker.Extensions;
 using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Worker;
 
+[ExcludeFromCodeCoverage]
 class Program
 {
     static async Task Main(string[] args)

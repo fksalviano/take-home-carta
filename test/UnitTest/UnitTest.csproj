@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Vesting\Application\Application.csproj" />
+    <ProjectReference Include="..\..\src\Vesting\Worker\Worker.csproj" />
   </ItemGroup>
   
   <ItemGroup> 

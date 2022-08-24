@@ -29,6 +29,7 @@ public static class FileUtil
         catch (Exception ex) 
         {
             exceptionHandler(lineNumber, ex);
+            break;
         }
         return result;
     }

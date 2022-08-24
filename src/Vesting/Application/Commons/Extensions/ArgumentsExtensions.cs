@@ -11,10 +11,12 @@ public static class WorkerExtensions
         var fileName = args[0];
 
         if (args.Count() == 1 || string.IsNullOrEmpty(args[1]))
-            throw new ArgumentException("Please inform the the Target Date", nameof(InputArguments.TargetDate));
+            throw new ArgumentException("Please inform the the Target Date", 
+                nameof(InputArguments.TargetDate));
 
         if (!DateTime.TryParse(args[1], out var targetDate))
-            throw new ArgumentException($"Invalid argument Target Date: {args[1]} is not a valid date", nameof(InputArguments.TargetDate));
+            throw new ArgumentException($"Invalid argument Target Date: {args[1]} is not a valid date", 
+                nameof(InputArguments.TargetDate));
 
         var digits = 0;
         if (args.Count() == 3)

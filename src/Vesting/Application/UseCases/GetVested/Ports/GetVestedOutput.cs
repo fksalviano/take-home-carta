@@ -4,12 +4,12 @@ namespace Application.UseCases.GetVested.Ports;
 
 public struct GetVestedOutput
 {
-    public GetVestedOutput(IEnumerable<VestedShedule> vestedShedules, int digits)
+    public GetVestedOutput(IEnumerable<VestedSchedule> vestedSchedules, int digits)
     {
-        VestedShedules = vestedShedules;
+        VestedSchedules = vestedSchedules;
         Digits = digits;
     }
 
-    public IEnumerable<VestedShedule> VestedShedules { get; }
+    public IEnumerable<VestedSchedule> VestedSchedules { get; }
     public int Digits { get; }
 }
