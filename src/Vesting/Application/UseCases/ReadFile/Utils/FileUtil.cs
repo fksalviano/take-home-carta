@@ -2,11 +2,11 @@ namespace Application.UseCases.ReadFile.Utils;
 
 public static class FileUtil
 {
-    public static async Task<IEnumerable<T>> ReadAllLinesAsync<T>(string fileName, CancellationToken cancellationToken, 
+    public static async Task<IEnumerable<T>> ReadAllLinesAsync<T>(string filePath, CancellationToken cancellationToken, 
         Func<string[], T> parseValuesFunc, 
         Action<int, Exception> exceptionHandler)
     {
-        var reader = new StreamReader(File.OpenRead(fileName));
+        var reader = new StreamReader(File.OpenRead(filePath));
         var result = new List<T>();
         var lineNumber = 0;
         while (!reader.EndOfStream)

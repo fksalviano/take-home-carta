@@ -12,7 +12,7 @@ public class ReadFileUseCase : IReadFileUseCase
 {
     public async Task<ReadFileOutput> ExecuteAsync(ReadFileInput input, CancellationToken cancellationToken)
     {
-        var vestingEvents = await FileUtil.ReadAllLinesAsync(input.FileName, cancellationToken, 
+        var vestingEvents = await FileUtil.ReadAllLinesAsync(input.FilePath, cancellationToken, 
             (lineValues) => new VestingEvent
             {
                 Type = Enum.Parse<VestingType>(lineValues[0]),

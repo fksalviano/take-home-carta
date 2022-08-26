@@ -1,18 +1,18 @@
 using FluentAssertions;
-using Application.Commons.Domain;
-using Application.Commons.Domain.Validators;
 using Application.Commons.Extensions;
+using AutoFixture;
 
 namespace UnitTest.Application.Extensions
 {
     public class ValidationExtensionsTests
     {
+        private Fixture _fixture = new Fixture();
+
         [Fact]
         public void ShouldConvertToDomainResult()
         {
-            // Arrrange
-            var input = GetInvalidInput();
-            var sut = new InputValidator().Validate(input);
+            // Arrange            
+            var sut = _fixture.Create<FluentValidation.Results.ValidationResult>();
 
             // Act
             var result = sut.ToDomainResult();
@@ -22,8 +22,5 @@ namespace UnitTest.Application.Extensions
             result.IsValid.Should().Be(sut.IsValid);
             result.Error.Should().Be(string.Join(", ", sut.Errors.Select(_ => _.ErrorMessage)));
         }
-
-        private static InputArguments GetInvalidInput() =>
-            new InputArguments(string.Empty, DateTime.Now);
-    }
+     }
 }

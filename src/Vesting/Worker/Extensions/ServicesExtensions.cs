@@ -17,9 +17,21 @@ public static class ServicesExtensions
         services
             .AddSingleton<IWorker, VestingWorker>()
             .AddSingleton<IWorkerOutputPort, WorkerOutputPort>()
-            .AddSingleton<IReadFileUseCase, ReadFileUseCase>()
-            .AddSingleton<IGetVestedUseCase, GetVestedUseCase>();
 
+            .AddSingletonWithValidation<IReadFileUseCase, ReadFileUseCase>(useCase =>
+                new ReadFileUseCaseValidation(useCase))
+
+            .AddSingletonWithValidation<IGetVestedUseCase, GetVestedUseCase>(useCase => 
+                new GetVestedUseCaseValidation(useCase));
+
+    public static IServiceCollection AddSingletonWithValidation<TInterface, TUseCase>(
+        this IServiceCollection services, Func<TUseCase, TInterface> getValidationFunc)
+        where TInterface: class where TUseCase: class, TInterface 
+        {
+            services.AddSingleton<TUseCase>();            
+            return services.AddSingleton<TInterface>(provider => 
+                getValidationFunc(provider.GetRequiredService<TUseCase>()));
+        }
 
     public static T GetService<T>(this IServiceCollection services) =>
         services.BuildServiceProvider().GetService<T>()!;

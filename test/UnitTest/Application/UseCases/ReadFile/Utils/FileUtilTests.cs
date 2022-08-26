@@ -2,7 +2,7 @@ using Application.UseCases.ReadFile.Utils;
 using Moq;
 using Moq.AutoMock;
 
-namespace UnitTest.Application.UseCases.ReadFile;
+namespace UnitTest.Application.UseCases.ReadFile.Utils;
 
 public class FileUtilTests
 {

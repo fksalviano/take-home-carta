@@ -7,20 +7,19 @@ using Worker.Workers;
 using Application.UseCases.ReadFile.Ports;
 using AutoFixture;
 using Application.UseCases.GetVested.Ports;
-using Application.UseCases.GetVested.Domain;
 using Application.Commons.Domain;
 
 namespace UnitTest.Worker;
 
 public class VestingWorkerTests
 {
-    private readonly VestingWorker _sut;
-    private readonly Fixture _fixture = new Fixture();
-
+    private readonly VestingWorker _sut;    
     private readonly Mock<IReadFileUseCase> _readFileUseCase;
     private readonly Mock<IGetVestedUseCase> _getVestedUseCase;
     private readonly IGetVestedOutputPort _getVestedOutputPort;
     private readonly Mock<IWorkerOutputPort> _outputPort;
+    
+    private readonly Fixture _fixture = new Fixture();
 
     public VestingWorkerTests()
     {
@@ -58,14 +57,15 @@ public class VestingWorkerTests
         _outputPort.Verify(output => output.Ok(It.IsAny<IEnumerable<string>>()), Times.Once);
 
         _outputPort.Verify(output => output.NotFound(), Times.Never);
+
+        _outputPort.Verify(output => output.Invalid(It.IsAny<string>()), Times.Never);
     }
 
     [Fact]
     public async Task ShouldExecuteAndReturnNotFound()
     {
         // Arrange
-        var args = new string[]{ "test.csv", "2020-01-01", "1" };
-        
+        var args = new string[]{ "test.csv", "2020-01-01", "1" };        
         var fileOutput = new ReadFileOutput(_fixture.Build<VestingEvent>().CreateMany(0));
 
         _readFileUseCase.Setup(useCase => 
@@ -82,26 +82,57 @@ public class VestingWorkerTests
         // Assert
         _outputPort.Verify(output => output.NotFound(), Times.Once);
 
-        _outputPort.Verify(output => output.Ok(It.IsAny<IEnumerable<string>>()), Times.Never);    
+        _outputPort.Verify(output => output.Ok(It.IsAny<IEnumerable<string>>()), Times.Never);
+
+        _outputPort.Verify(output => output.Invalid(It.IsAny<string>()), Times.Never);
     }
 
     [Fact]
     public async Task ShouldExecuteAndReturnInvalid()
     {
         // Arrange
-        var args = new string[]{ "not-found.csv", "2020-01-01", "1" };
+        var args = new string[]{ "test.csv", "2020-01-01", "1" };        
+        var fileOutput = new ReadFileOutput(_fixture.Build<VestingEvent>().CreateMany(1));
+        var error = _fixture.Create<ValidationResult>();
+
+        _readFileUseCase.Setup(useCase => 
+            useCase.ExecuteAsync(It.IsAny<ReadFileInput>(), CancellationToken.None))
+                .ReturnsAsync(fileOutput);
+
+        _getVestedUseCase.Setup(useCase => 
+            useCase.ExecuteAsync(It.IsAny<GetVestedInput>(), CancellationToken.None))
+                .Callback(() => _getVestedOutputPort.Invalid(error));
 
         // Act
         await _sut.ExecuteAsync(args, CancellationToken.None);
 
         // Assert
-        _outputPort.Verify(output => 
-            output.Invalid(It.IsAny<string>()), Times.Once);
+        _outputPort.Verify(output => output.Invalid(It.IsAny<string>()), Times.Once);
 
-        _outputPort.Verify(output => 
-            output.NotFound(), Times.Never);
+        _outputPort.Verify(output => output.NotFound(), Times.Never);
 
-        _outputPort.Verify(output => 
-            output.Ok(It.IsAny<IEnumerable<string>>()), Times.Never);    
+        _outputPort.Verify(output => output.Ok(It.IsAny<IEnumerable<string>>()), Times.Never);           
+    }
+
+    [Fact]
+    public async Task ShouldExecuteAndReadFileReturnInvalid()
+    {
+        // Arrange
+        var args = new string[]{ "not-found.csv", "2020-01-01", "1" };
+        var fileOutput = new ReadFileOutput(_fixture.Create<ValidationResult>());
+
+        _readFileUseCase.Setup(useCase => 
+            useCase.ExecuteAsync(It.IsAny<ReadFileInput>(), CancellationToken.None))
+                .ReturnsAsync(fileOutput);
+
+        // Act
+        await _sut.ExecuteAsync(args, CancellationToken.None);
+
+        // Assert
+        _outputPort.Verify(output => output.Invalid(It.IsAny<string>()), Times.Once);
+
+        _outputPort.Verify(output => output.NotFound(), Times.Never);
+
+        _outputPort.Verify(output => output.Ok(It.IsAny<IEnumerable<string>>()), Times.Never);    
     }
 }

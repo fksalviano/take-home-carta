@@ -4,10 +4,13 @@ public struct ReadFileInput
 {
     public ReadFileInput(string fileName, int digits)
     {
-        FileName = fileName;
+        FilePath = GetFilePath(fileName);
         Digits = digits;
     }
 
-    public string FileName { get; }
+    public string FilePath { get; }
     public int Digits { get; }   
+    
+    public static string GetFilePath(string fileName) =>
+        Path.Combine(Directory.GetCurrentDirectory(), fileName);
 }
