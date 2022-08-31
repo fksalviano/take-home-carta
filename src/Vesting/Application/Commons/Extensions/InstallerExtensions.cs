@@ -11,9 +11,11 @@ public static class InstallerExtensions
         var installers = Assembly.GetExecutingAssembly().GetTypes()
             .Where(type => type.IsClass && typeof(IServiceInstaller).IsAssignableFrom(type));
 
-        installers.ToList().ForEach(installer =>
-            ((IServiceInstaller)Activator.CreateInstance(installer)!)
-                .InstallServices(services));
+        foreach (var installer in installers)
+        {
+            var serviceInstaller = (IServiceInstaller)Activator.CreateInstance(installer)!;
+            serviceInstaller.InstallServices(services);
+        }
 
         return services;
     }
