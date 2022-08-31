@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Application.Commons.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Commons.Extensions;
 
+[ExcludeFromCodeCoverage]
 public static class InstallerExtensions
 {
     public static IServiceCollection InstallServices(this IServiceCollection services)
