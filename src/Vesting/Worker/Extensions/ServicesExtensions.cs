@@ -13,7 +13,8 @@ namespace Worker.Extensions;
 [ExcludeFromCodeCoverage]
 public static class ServicesExtensions
 {
-    public static void ConfigureServices(this IServiceCollection services) =>
+    public static void ConfigureServices(this IServiceCollection services)
+    {
         services
             .AddSingleton<IWorker, VestingWorker>()
             .AddSingleton<IWorkerOutputPort, WorkerOutputPort>()
@@ -23,14 +24,19 @@ public static class ServicesExtensions
 
             .AddSingletonWithValidation<IGetVestedUseCase, GetVestedUseCase>(useCase => 
                 new GetVestedUseCaseValidation(useCase));
+    }
 
     public static IServiceCollection AddSingletonWithValidation<TInterface, TUseCase>(
-        this IServiceCollection services, Func<TUseCase, TInterface> getValidationFunc)
+        this IServiceCollection services, Func<TUseCase, TInterface> getValidationInstance)
         where TInterface: class where TUseCase: class, TInterface 
         {
-            services.AddSingleton<TUseCase>();            
-            return services.AddSingleton<TInterface>(provider => 
-                getValidationFunc(provider.GetRequiredService<TUseCase>()));
+            services.AddSingleton<TUseCase>();
+            services.AddSingleton<TInterface>(provider =>
+            {
+                var instance = provider.GetRequiredService<TUseCase>();
+                return getValidationInstance(instance);
+            });
+            return services;
         }
 
     public static T GetService<T>(this IServiceCollection services) =>
