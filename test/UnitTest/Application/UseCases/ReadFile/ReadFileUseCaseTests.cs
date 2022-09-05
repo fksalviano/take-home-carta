@@ -1,5 +1,4 @@
 using System.Collections;
-using Application.Commons.Domain;
 using Application.UseCases.ReadFile;
 using Application.UseCases.ReadFile.Abstractions;
 using Application.UseCases.ReadFile.Ports;
@@ -44,12 +43,13 @@ public class ReadFileUseCaseTests
     {
         // Arrange
         var invalidDigits = 999; 
-        var input = new ReadFileInput("test.csv", invalidDigits);
+        var input = new ReadFileInput("test-invalid.csv", invalidDigits);
 
         // Act
-        var action = () => _sut.ExecuteAsync(input, CancellationToken.None);
+        var result = await _sut.ExecuteAsync(input, CancellationToken.None);
+        var action = () => result.ToList();
 
         // Assert
-        await action.Should().ThrowAsync<InvalidDataException>();
+        action.Should().Throw<InvalidDataException>();
     }
 }

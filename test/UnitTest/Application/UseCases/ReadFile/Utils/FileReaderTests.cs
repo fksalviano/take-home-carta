@@ -4,12 +4,12 @@ using Moq.AutoMock;
 
 namespace UnitTest.Application.UseCases.ReadFile.Utils;
 
-public class FileUtilTests
+public class FileReaderTests
 {
     private readonly Mock<Func<string[], object>> _parseValuesFunc;
     private readonly Mock<Action<int, Exception>> _exceptionHandler;
 
-    public FileUtilTests()
+    public FileReaderTests()
     {
         var mocker = new AutoMocker();
 
@@ -25,34 +25,12 @@ public class FileUtilTests
             .Returns(new Object());
 
         // Act
-        var result = FileUtil.ReadAllLinesAsync("test.csv", CancellationToken.None, 
-            _parseValuesFunc.Object, _exceptionHandler.Object);
+        var result = FileReader.GetAsEnumerable("test.csv", 
+            _parseValuesFunc.Object, _exceptionHandler.Object).ToList();
 
         // Assert
         _parseValuesFunc.Verify(func => func.Invoke(It.IsAny<string[]>()), 
             Times.AtLeastOnce);
-
-        _exceptionHandler.Verify(action => action.Invoke(It.IsAny<int>(), It.IsAny<Exception>()), 
-            Times.Never);
-    }
-
-    [Fact]
-    public void ShouldReadAllLinesAndBreakOnCancel()
-    {
-        // Arrange
-        _parseValuesFunc.Setup(func => func.Invoke(It.IsAny<string[]>()))
-            .Returns(new Object());
-
-        var cancellationSource = new CancellationTokenSource();
-        cancellationSource.Cancel();
-
-        // Act
-        var result = FileUtil.ReadAllLinesAsync("test.csv", cancellationSource.Token, 
-            _parseValuesFunc.Object, _exceptionHandler.Object);
-
-        // Assert
-        _parseValuesFunc.Verify(func => func.Invoke(It.IsAny<string[]>()), 
-            Times.Never);
 
         _exceptionHandler.Verify(action => action.Invoke(It.IsAny<int>(), It.IsAny<Exception>()), 
             Times.Never);
@@ -66,8 +44,8 @@ public class FileUtilTests
             .Throws<Exception>();
 
         // Act
-        var result = FileUtil.ReadAllLinesAsync("test.csv", CancellationToken.None,
-            _parseValuesFunc.Object, _exceptionHandler.Object);
+        var result = FileReader.GetAsEnumerable("test.csv",
+            _parseValuesFunc.Object, _exceptionHandler.Object).ToList();
 
         // Assert
         _exceptionHandler.Verify(action => action.Invoke(It.IsAny<int>(), It.IsAny<Exception>()), 

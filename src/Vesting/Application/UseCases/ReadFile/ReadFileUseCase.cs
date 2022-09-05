@@ -12,7 +12,7 @@ public class ReadFileUseCase : IReadFileUseCase
 {
     public async Task<ReadFileOutput> ExecuteAsync(ReadFileInput input, CancellationToken cancellationToken)
     {
-        var vestingEvents = await FileUtil.ReadAllLinesAsync(input.FilePath, cancellationToken, 
+        var vestingEvents = FileReader.GetAsEnumerable(input.FilePath,
             (lineValues) => new VestingEvent
             {
                 Type = Enum.Parse<VestingType>(lineValues[0]),
@@ -24,9 +24,11 @@ public class ReadFileUseCase : IReadFileUseCase
             },
             (lineNumber, ex) =>
                 throw new InvalidDataException($"File Line {lineNumber} is invalid: {ex.Message}", ex)
-        );
+        );        
 
-        return vestingEvents.ToOutput();
+        var output = vestingEvents.ToOutput();
+        
+        return await Task.FromResult(output);
     }
 
     private decimal ParseQuantity(string quantity, int digits)
