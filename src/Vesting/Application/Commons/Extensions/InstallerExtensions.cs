@@ -18,20 +18,19 @@ public static class InstallerExtensions
             var serviceInstaller = (IServiceInstaller)Activator.CreateInstance(installer)!;
             serviceInstaller.InstallServices(services);
         }
-
         return services;
     }
 
     public static IServiceCollection AddSingletonWithValidation<TInterface, TUseCase>(
         this IServiceCollection services, Func<TUseCase, TInterface> getValidationInstance)
-        where TInterface: class where TUseCase: class, TInterface 
-        {
-            services.AddSingleton<TUseCase>();
-            services.AddSingleton<TInterface>(provider =>
+        where TInterface: class where TUseCase: class, TInterface
+    {
+        return services
+            .AddSingleton<TUseCase>()
+            .AddSingleton<TInterface>(provider =>
             {
                 var instance = provider.GetRequiredService<TUseCase>();
                 return getValidationInstance(instance);
             });
-            return services;
-        }
+    }
 }
