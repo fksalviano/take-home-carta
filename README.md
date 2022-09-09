@@ -7,7 +7,7 @@ Using Clean Architecture and Vertical Slice, isolating the Application Common Do
 ### Use Cases
 
 - **GetVested**: 
-    Responsible to get Vested Schedules based on CSV file content mapped and the input Target Date.
+    Responsible to get Vested Schedules based on CSV file mapped content and the input Target Date.
     
 ### Worker
 
