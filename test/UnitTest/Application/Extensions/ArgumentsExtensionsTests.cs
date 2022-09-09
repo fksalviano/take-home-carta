@@ -1,5 +1,5 @@
 using FluentAssertions;
-using Application.Commons.Extensions;
+using Application.UseCases.GetVested.Extensions;
 
 namespace UnitTest.Application.Extensions;
 
@@ -23,7 +23,7 @@ public class WorkerExtensionsTests
     };
 
     [Theory]
-    [MemberData(nameof(InvalidArgumensData))]
+    [MemberData(nameof(InvalidArgumentsData))]
     public void ShouldTryParseToInputFail(string[] args)
     {
         // Act
@@ -33,7 +33,7 @@ public class WorkerExtensionsTests
         action.Should().Throw<ArgumentException>();
     }
 
-    public static object[] InvalidArgumensData() => new object[]
+    public static object[] InvalidArgumentsData() => new object[]
     {
         new object[] { new string[] {} }, //all null
         new object[] {new string[] {"example.csv"} }, //null date

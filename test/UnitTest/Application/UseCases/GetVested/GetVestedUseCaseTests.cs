@@ -3,6 +3,7 @@ using Application.UseCases.GetVested;
 using Application.UseCases.GetVested.Abstractions;
 using Application.UseCases.GetVested.Ports;
 using AutoFixture;
+using FluentAssertions;
 using Moq;
 using Moq.AutoMock;
 
@@ -10,7 +11,6 @@ namespace UnitTest.Application.UseCases.GetVested;
 
 public class GetVestedUseCaseTests
 {
-
     private readonly IGetVestedUseCase _sut;
     private readonly Mock<IGetVestedOutputPort> _outputPort;
     private readonly Fixture _fixture;
@@ -30,10 +30,7 @@ public class GetVestedUseCaseTests
     public async Task ShouldExecuteAndOutputOK()
     {
         // Arrange
-        var vestingEvents = _fixture.Build<VestingEvent>().CreateMany(1);
-        var date = vestingEvents.First().Date;
-
-        var input = new GetVestedInput(vestingEvents, date, 0);
+        var input = new GetVestedInput("test.csv", DateTime.MaxValue, 0);
 
         // Act
         await _sut.ExecuteAsync(input, CancellationToken.None);
@@ -49,9 +46,7 @@ public class GetVestedUseCaseTests
     public async Task ShouldExecuteAndOutputNotFound()
     {
         // Arrange
-        var vestingEvents = _fixture.Build<VestingEvent>().CreateMany(0);
-
-        var input = new GetVestedInput(vestingEvents, DateTime.MinValue, 0);
+        var input = new GetVestedInput("test-empty.csv", DateTime.MaxValue, 0);
 
         // Act
         await _sut.ExecuteAsync(input, CancellationToken.None);
@@ -61,5 +56,19 @@ public class GetVestedUseCaseTests
 
         _outputPort.Verify(output => 
             output.Ok(It.IsAny<GetVestedOutput>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task ShouldExecuteAndOutputInvalid()
+    {
+        // Arrange
+        var input = new GetVestedInput("test-invalid.csv", DateTime.MaxValue, 0);
+
+        // Act        
+        await _sut.ExecuteAsync(input, CancellationToken.None);
+        
+        // Assert
+        _outputPort.Verify(output => 
+            output.Invalid(It.IsAny<ValidationResult>()), Times.Once);        
     }
 }

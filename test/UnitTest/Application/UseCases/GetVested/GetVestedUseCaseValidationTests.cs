@@ -1,6 +1,7 @@
 using Application.Commons.Domain;
 using Application.UseCases.GetVested;
 using Application.UseCases.GetVested.Abstractions;
+using Application.UseCases.GetVested.Domain;
 using Application.UseCases.GetVested.Ports;
 using AutoFixture;
 using Moq;
@@ -31,35 +32,37 @@ public class ReadFileUseCaseValidationTests
     public async Task ShouldValidateSuccessfully()
     {
         // Arrange
-        var events = _fixture.Build<VestingEvent>().CreateMany(1);
-        var input = new GetVestedInput(events, events.First().Date, 1);
+        var input = new GetVestedInput("test.csv", DateTime.MaxValue, 0);
         
         // Act
         await _sut.ExecuteAsync(input, CancellationToken.None);
         
         // Assert
-        _outputPort.Verify(output => 
-            output.Invalid(It.IsAny<ValidationResult>()), Times.Never);
-
         _useCase.Verify(useCase => 
             useCase.ExecuteAsync(input, CancellationToken.None), Times.Once);
-    }
 
-    [Fact]
-    public async Task ShouldValidateReturnInvalid()
+        _outputPort.Verify(output => 
+            output.Invalid(It.IsAny<ValidationResult>()), Times.Never);
+    }    
+
+    [Theory]
+    [InlineData("", 1)]
+    [InlineData("not-found.csv", 1)]
+    [InlineData("test.csv", 99)]
+    [InlineData("test.csv", -1)]
+    public async Task ShouldValidateReturnInvalid(string fileName, int digits)
     {
-        // Arrange
-        var events = _fixture.Build<VestingEvent>().CreateMany(1);
-        var input = new GetVestedInput(events, events.First().Date, 99);
+        // Arrange        
+        var input = new GetVestedInput(fileName, DateTime.MaxValue, digits);                
         
         // Act
         await _sut.ExecuteAsync(input, CancellationToken.None);
         
         // Assert
-        _useCase.Verify(useCase => 
-            useCase.ExecuteAsync(input, CancellationToken.None), Times.Never);
-
         _outputPort.Verify(output => 
             output.Invalid(It.IsAny<ValidationResult>()), Times.Once);
+
+        _useCase.Verify(useCase => 
+            useCase.ExecuteAsync(input, CancellationToken.None), Times.Never);
     }
 }

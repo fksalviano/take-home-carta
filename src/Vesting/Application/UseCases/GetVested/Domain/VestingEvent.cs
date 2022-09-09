@@ -1,4 +1,4 @@
-namespace Application.Commons.Domain;
+namespace Application.UseCases.GetVested.Domain;
 
 public class VestingEvent
 {

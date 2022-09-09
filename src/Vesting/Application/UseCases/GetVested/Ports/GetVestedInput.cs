@@ -4,7 +4,7 @@ namespace Application.UseCases.GetVested.Ports;
 
 public record GetVestedInput
 (
-    IEnumerable<VestingEvent> VestingEvents, 
+    string FileName,
     DateTime Date, 
     int Digits
 );

@@ -1,19 +1,21 @@
+using Application.Commons.Domain;
+using Application.UseCases.GetVested.Ports;
 using AutoFixture;
+using FluentAssertions;
 using Moq.AutoMock;
-using Worker.Abstractions;
-using Worker.Ports;
+using Worker;
 
 namespace UnitTest.Worker;
 
 public class WorkerOutputPortTests
 {
-    private readonly IWorkerOutputPort _sut;
+    private readonly OutputPort _sut;
     private readonly Fixture _fixture;
 
     public WorkerOutputPortTests()
     {
         var mocker = new AutoMocker();
-        _sut = mocker.CreateInstance<WorkerOutputPort>();
+        _sut = mocker.CreateInstance<OutputPort>();
 
         _fixture = new Fixture();
     }
@@ -22,7 +24,7 @@ public class WorkerOutputPortTests
     public void ShouldOutputOk()
     {
         // Arrange
-        var output = _fixture.Build<string>().CreateMany(1);
+        var output = _fixture.Create<GetVestedOutput>();
 
         // Act
         _sut.Ok(output);
@@ -32,7 +34,7 @@ public class WorkerOutputPortTests
     public void ShouldOutputInvalid()
     {
         // Arrange
-        var error = _fixture.Create<string>();
+        var error = _fixture.Create<ValidationResult>();
 
         // Act
         _sut.Invalid(error);
@@ -43,5 +45,15 @@ public class WorkerOutputPortTests
     {
         // Act
         _sut.NotFound();
+    }
+
+    [Fact]
+    public void ShouldCreateSuccessfully()
+    {
+        // Act
+        var result = OutputPort.Create();
+
+        // Assert
+        result.Should().NotBeNull(); 
     }
 }

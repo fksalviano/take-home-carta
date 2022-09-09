@@ -1,7 +1,11 @@
-﻿using Worker.Abstractions;
-using Worker.Extensions;
+﻿using Worker.Extensions;
+using Application.Commons.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
+using Application.UseCases.GetVested.Abstractions;
+using Application.UseCases.GetVested.Ports;
+using Application.UseCases.GetVested.Extensions;
+using Application.Commons.Domain;
 
 namespace Worker;
 
@@ -11,15 +15,17 @@ class Program
     static async Task Main(string[] args)
     {
         var services = new ServiceCollection();
-        services.ConfigureServices();
+        services.InstallServices();
 
-        var worker = services.GetService<IWorker>();
+        var useCase = services.BuildServiceProvider().GetService<IGetVestedUseCase>()!;
+        useCase.SetOutputPort(OutputPort.Create());
         try
         {
             var cancellationSource = new CancellationTokenSource();
-            cancellationSource.ConfigureCancelEvent(ConsoleCancel);
+            cancellationSource.ConfigureCancelEvent(OnCancel);
 
-            await worker.ExecuteAsync(args, cancellationSource.Token);
+            var input = args.TryParseToInput();
+            await useCase.ExecuteAsync(input, cancellationSource.Token);
         }
         catch (Exception ex)
         {
@@ -28,9 +34,26 @@ class Program
         }
     }
 
-    private static void ConsoleCancel()
+    private static void OnCancel()
     {
         Console.WriteLine("Cancelling...");
         Environment.Exit(-1);
     }
+}
+
+public class OutputPort : IGetVestedOutputPort
+{
+    public static OutputPort Create() => new OutputPort();
+
+    public void Ok(GetVestedOutput output)
+    {
+        foreach (var line in output.ToCSV())
+            Console.WriteLine(line);
+    }
+
+    public void Invalid(ValidationResult result) =>
+        Console.WriteLine($"Invalid input: {result.Error}");
+
+    public void NotFound() =>
+       Console.WriteLine("NOT FOUND: Vesting events not found on file");
 }
