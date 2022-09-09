@@ -16,7 +16,7 @@ public class GetVestedUseCaseValidation : AbstractValidator<GetVestedInput>, IGe
         _useCase = useCase;
 
         RuleFor(input => input.FileName)
-            .NotNull().NotEmpty()
+            .NotEmpty()
             .WithMessage("File name is null or empty");
 
         RuleFor(input => input)
@@ -33,7 +33,7 @@ public class GetVestedUseCaseValidation : AbstractValidator<GetVestedInput>, IGe
     }
 
     private bool FileExists(GetVestedInput input) =>
-        File.Exists(input.GetFilePath());
+        !string.IsNullOrEmpty(input.FileName) && File.Exists(input.GetFilePath());
 
     public void SetOutputPort(IGetVestedOutputPort outputPort)
     {
