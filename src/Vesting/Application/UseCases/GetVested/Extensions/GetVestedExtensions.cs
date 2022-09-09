@@ -10,7 +10,7 @@ public static class GetVestedExtensions
     {
         string? fileName = null;
         DateTime? date = null;
-        int digits = 0;
+        int? digits = 0;
 
         if (args.Count() >= 1 && !string.IsNullOrEmpty(args[0]))
             fileName = args[0];
@@ -22,6 +22,8 @@ public static class GetVestedExtensions
         if (args.Count() >=3)
             if (int.TryParse(args[2], out var parsedDigits))
                 digits = parsedDigits;
+            else
+                digits = null;
 
         return new GetVestedInput(fileName, date, digits);
     }

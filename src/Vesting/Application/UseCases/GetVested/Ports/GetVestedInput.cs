@@ -4,5 +4,5 @@ public record GetVestedInput
 (
     string? FileName,
     DateTime? Date, 
-    int Digits = 0
+    int? Digits
 );

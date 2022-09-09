@@ -29,7 +29,7 @@ public class GetVestedUseCase : IGetVestedUseCase
                 EmployeeName = lineValues[2],
                 AwardId = lineValues[3],
                 Date = DateTime.Parse(lineValues[4]),
-                Quantity = Round(lineValues[5], input.Digits)
+                Quantity = Round(lineValues[5], input.Digits!.Value)
             },
             HandleException
         ).ToEnumerable();
@@ -60,7 +60,7 @@ public class GetVestedUseCase : IGetVestedUseCase
             return;
         }
 
-        var output = schedules.ToOutput(input.Digits);
+        var output = schedules.ToOutput(input.Digits!.Value);
         _outputPort!.Ok(output);
     }
 
