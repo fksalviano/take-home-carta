@@ -1,7 +1,6 @@
 using Application.Commons.Domain;
 using Application.UseCases.GetVested;
 using Application.UseCases.GetVested.Abstractions;
-using Application.UseCases.GetVested.Domain;
 using Application.UseCases.GetVested.Ports;
 using AutoFixture;
 using Moq;
@@ -42,7 +41,7 @@ public class ReadFileUseCaseValidationTests
             useCase.ExecuteAsync(input, CancellationToken.None), Times.Once);
 
         _outputPort.Verify(output => 
-            output.Invalid(It.IsAny<ValidationResult>()), Times.Never);
+            output.Invalid(It.IsAny<Result>()), Times.Never);
     }    
 
     [Theory]
@@ -60,7 +59,7 @@ public class ReadFileUseCaseValidationTests
         
         // Assert
         _outputPort.Verify(output => 
-            output.Invalid(It.IsAny<ValidationResult>()), Times.Once);
+            output.Invalid(It.IsAny<Result>()), Times.Once);
 
         _useCase.Verify(useCase => 
             useCase.ExecuteAsync(input, CancellationToken.None), Times.Never);

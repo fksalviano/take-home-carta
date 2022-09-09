@@ -1,7 +1,6 @@
 using Application.Commons.Domain;
 using Application.UseCases.GetVested.Ports;
 using AutoFixture;
-using FluentAssertions;
 using Moq.AutoMock;
 using Worker;
 
@@ -34,7 +33,7 @@ public class WorkerOutputPortTests
     public void ShouldOutputInvalid()
     {
         // Arrange
-        var error = _fixture.Create<ValidationResult>();
+        var error = _fixture.Create<Result>();
 
         // Act
         _sut.Invalid(error);
@@ -45,15 +44,5 @@ public class WorkerOutputPortTests
     {
         // Act
         _sut.NotFound();
-    }
-
-    [Fact]
-    public void ShouldCreateSuccessfully()
-    {
-        // Act
-        var result = OutputPort.Create();
-
-        // Assert
-        result.Should().NotBeNull(); 
     }
 }

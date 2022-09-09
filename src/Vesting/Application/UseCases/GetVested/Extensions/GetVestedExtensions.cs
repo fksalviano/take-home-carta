@@ -6,28 +6,24 @@ namespace Application.UseCases.GetVested.Extensions;
 
 public static class GetVestedExtensions
 {
-    public static GetVestedInput TryParseToInput(this string[] args)
+    public static GetVestedInput ToInput(this string[] args)
     {
-        if (args.Count() == 0 || string.IsNullOrEmpty(args[0]))
-            throw new ArgumentException("Please inform the File Name", nameof(GetVestedInput.FileName));
-        var fileName = args[0];
+        string? fileName = null;
+        DateTime? date = null;
+        int digits = 0;
 
-        if (args.Count() == 1 || string.IsNullOrEmpty(args[1]))
-            throw new ArgumentException("Please inform the the Target Date", 
-                nameof(GetVestedInput.Date));
+        if (args.Count() >= 1 && !string.IsNullOrEmpty(args[0]))
+            fileName = args[0];
 
-        if (!DateTime.TryParse(args[1], out var targetDate))
-            throw new ArgumentException($"Invalid argument Target Date: {args[1]} is not a valid date", 
-                nameof(GetVestedInput.Date));
+        if (args.Count() >= 2 && !string.IsNullOrEmpty(args[1]))
+            if (DateTime.TryParse(args[1], out var parsedDate))
+                date = parsedDate;
 
-        var digits = 0;
-        if (args.Count() == 3)
-        {
-            if (!int.TryParse(args[2], out digits))
-                throw new ArgumentException("Invalid argument Digits", nameof(GetVestedInput.Digits));
-        }
+        if (args.Count() >=3)
+            if (int.TryParse(args[2], out var parsedDigits))
+                digits = parsedDigits;
 
-        return new GetVestedInput(fileName, targetDate, digits);
+        return new GetVestedInput(fileName, date, digits);
     }
 
     public static GetVestedOutput ToOutput(this IEnumerable<VestedSchedule> vestedSchedules, int digits) =>
@@ -45,5 +41,5 @@ public static class GetVestedExtensions
         new NumberFormatInfo { NumberGroupSeparator = string.Empty };
 
     public static string GetFilePath(this GetVestedInput input) =>
-        Path.Combine(Directory.GetCurrentDirectory(), input.FileName);
+        Path.Combine(Directory.GetCurrentDirectory(), input.FileName!);
 }

@@ -35,11 +35,11 @@ public class GetVestedUseCase : IGetVestedUseCase
         ).ToEnumerable();
 
         var schedules = await Task.Run(() => vestingEvents
-            .GroupBy(vesting => new 
-            { 
-                vesting.EmployeeId, 
-                vesting.EmployeeName, 
-                vesting.AwardId 
+            .GroupBy(vesting => new
+            {
+                vesting.EmployeeId,
+                vesting.EmployeeName,
+                vesting.AwardId
             })
             .Select(group => new VestedSchedule
             {
@@ -48,9 +48,9 @@ public class GetVestedUseCase : IGetVestedUseCase
                 AwardId = group.Key.AwardId,
                 Quantity = group
                     .Where(vesting => vesting.Date <= input.Date)
-                    .Sum(vesting => vesting.Type == CANCEL 
-                        ? vesting.Quantity * -1 
-                        : vesting.Quantity)                
+                    .Sum(vesting => vesting.Type == CANCEL
+                        ? vesting.Quantity * -1
+                        : vesting.Quantity)
             }).ToList()
         );
 
@@ -71,6 +71,5 @@ public class GetVestedUseCase : IGetVestedUseCase
     }
 
     private void HandleException(int lineNumber, Exception ex) =>
-        _outputPort!.Invalid(new ValidationResult(false,
-            $"File Line {lineNumber} invalid: {ex.Message}"));
+        _outputPort!.Invalid(Result.Error($"File Line {lineNumber} invalid: {ex.Message}"));
 }

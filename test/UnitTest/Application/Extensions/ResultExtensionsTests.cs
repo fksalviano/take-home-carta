@@ -4,7 +4,7 @@ using AutoFixture;
 
 namespace UnitTest.Application.Extensions
 {
-    public class ValidationExtensionsTests
+    public class ResultExtensionsTests
     {
         private Fixture _fixture = new Fixture();
 
@@ -20,7 +20,7 @@ namespace UnitTest.Application.Extensions
             // Assert
             result.Should().NotBeNull();
             result.IsValid.Should().Be(sut.IsValid);
-            result.Error.Should().Be(string.Join(", ", sut.Errors.Select(_ => _.ErrorMessage)));
+            result.ErrorMessage.Should().Be(string.Join(", ", sut.Errors.Select(_ => _.ErrorMessage)));
         }
      }
 }

@@ -1,4 +1,3 @@
-using Application.Commons.Domain;
 using Application.UseCases.GetVested.Domain;
 using Application.UseCases.GetVested.Extensions;
 using Application.UseCases.GetVested.Ports;
@@ -42,10 +41,10 @@ public class GetVestedExtensionsTests
 
     [Theory]
     [MemberData(nameof(ValidArgumentsData))]
-    public void ShouldTryParseToInputSuccessfully(string[] args)
+    public void ShouldConvertToInputSuccessfully(string[] args)
     {
         // Act
-        var result = args.TryParseToInput();
+        var result = args.ToInput();
 
         // Assert
         result.Should().NotBeNull();
@@ -59,13 +58,17 @@ public class GetVestedExtensionsTests
 
     [Theory]
     [MemberData(nameof(InvalidArgumentsData))]
-    public void ShouldTryParseToInputFail(string[] args)
+    public void ShouldConvertToInputInvalid(string[] args)
     {
         // Act
-        var action = () => args.TryParseToInput(); 
+        var input = args.ToInput(); 
 
         // Assert
-        action.Should().Throw<ArgumentException>();
+        input.Should().NotBeNull();
+        input.Should().Match<GetVestedInput>(input => 
+            input.FileName == null ||
+            input.Date == null ||
+            input.Digits == 0);
     }
 
     public static object[] InvalidArgumentsData() => new object[]

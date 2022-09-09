@@ -5,7 +5,7 @@ namespace Worker.Extensions;
 [ExcludeFromCodeCoverage]
 public static class CancellationTokenSourceExtensions
 {
-    public static void ConfigureCancelEvent(this CancellationTokenSource cancellationSource, 
+    public static CancellationTokenSource ConfigureCancelEvent(this CancellationTokenSource cancellationSource, 
         Action onCancelAction)
     {
         Console.CancelKeyPress += (sender, eventArgs) =>
@@ -14,5 +14,6 @@ public static class CancellationTokenSourceExtensions
             eventArgs.Cancel = true;   
             onCancelAction();
         };
+        return cancellationSource;
     }
 }

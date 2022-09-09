@@ -12,26 +12,20 @@ namespace Worker;
 [ExcludeFromCodeCoverage]
 class Program
 {
+    private static OutputPort _outputPort => new OutputPort();
+    private static CancellationTokenSource _cts => new CancellationTokenSource()
+        .ConfigureCancelEvent(OnCancel);
+
     static async Task Main(string[] args)
     {
         var services = new ServiceCollection();
         services.InstallServices();
 
-        var useCase = services.BuildServiceProvider().GetService<IGetVestedUseCase>()!;
-        useCase.SetOutputPort(OutputPort.Create());
-        try
-        {
-            var cancellationSource = new CancellationTokenSource();
-            cancellationSource.ConfigureCancelEvent(OnCancel);
+        var useCase = services.GetService<IGetVestedUseCase>()!;
+        useCase.SetOutputPort(_outputPort);
 
-            var input = args.TryParseToInput();
-            await useCase.ExecuteAsync(input, cancellationSource.Token);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"ERROR: {ex.Message}");
-            Environment.ExitCode = 1;
-        }
+        var input = args.ToInput();
+        await useCase.ExecuteAsync(input, _cts.Token);
     }
 
     private static void OnCancel()
@@ -43,16 +37,14 @@ class Program
 
 public class OutputPort : IGetVestedOutputPort
 {
-    public static OutputPort Create() => new OutputPort();
-
     public void Ok(GetVestedOutput output)
     {
         foreach (var line in output.ToCSV())
             Console.WriteLine(line);
     }
 
-    public void Invalid(ValidationResult result) =>
-        Console.WriteLine($"Invalid input: {result.Error}");
+    public void Invalid(Result result) =>
+        Console.WriteLine($"Invalid input: {result.ErrorMessage}");
 
     public void NotFound() =>
        Console.WriteLine("NOT FOUND: Vesting events not found on file");

@@ -33,4 +33,7 @@ public static class InstallerExtensions
                 return getValidationInstance(instance);
             });
     }
+
+    public static T GetService<T>(this IServiceCollection services) =>
+        services.BuildServiceProvider().GetService<T>()!;
 }

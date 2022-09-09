@@ -3,7 +3,6 @@ using Application.UseCases.GetVested;
 using Application.UseCases.GetVested.Abstractions;
 using Application.UseCases.GetVested.Ports;
 using AutoFixture;
-using FluentAssertions;
 using Moq;
 using Moq.AutoMock;
 
@@ -69,6 +68,6 @@ public class GetVestedUseCaseTests
         
         // Assert
         _outputPort.Verify(output => 
-            output.Invalid(It.IsAny<ValidationResult>()), Times.Once);        
+            output.Invalid(It.IsAny<Result>()), Times.Once);        
     }
 }

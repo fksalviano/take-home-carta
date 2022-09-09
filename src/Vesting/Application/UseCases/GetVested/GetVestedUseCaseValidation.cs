@@ -23,12 +23,16 @@ public class GetVestedUseCaseValidation : AbstractValidator<GetVestedInput>, IGe
             .Must(FileExists)
             .WithMessage("File not exists");
 
+        RuleFor(input => input.Date)
+            .NotNull()
+            .WithMessage("Date is null or invalid");
+
         RuleFor(input => input.Digits)
             .InclusiveBetween(0, 6)
             .WithMessage("Digits should be between 0 and 6");
     }
 
-    private bool FileExists(GetVestedInput input) => 
+    private bool FileExists(GetVestedInput input) =>
         File.Exists(input.GetFilePath());
 
     public void SetOutputPort(IGetVestedOutputPort outputPort)
@@ -39,7 +43,7 @@ public class GetVestedUseCaseValidation : AbstractValidator<GetVestedInput>, IGe
 
     public async Task ExecuteAsync(GetVestedInput input, CancellationToken cancellationToken)
     {
-        var result = await ValidateAsync(input, cancellationToken);        
+        var result = await ValidateAsync(input, cancellationToken);
         if (!result.IsValid)
         {
             _outputPort!.Invalid(result.ToDomainResult());
