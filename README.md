@@ -2,25 +2,20 @@
 
 Take Home test developed in **C#** with **.NET Core 6.0**.
 
-Using Clean Architecture and Vertical Slice, isolating the Domain of each Use Case. 
+Using Clean Architecture and Vertical Slice, isolating the Application Common Domain from Use Case Domain.
 
 ### Use Cases
 
-To better exemplify the use of this architecture, the Application Domain was separated on the following use cases:
-
-- **ReadFile**: 
-    Responsable to read the CSV file and return it´s content mapped in a list of Domain objects.
-
 - **GetVested**: 
-    Responsable to get Vested Schedules based on CSV file content that was mapped and the input Target Date.
+    Responsible to get Vested Schedules based on CSV file content mapped and the input Target Date.
     
 ### Worker
 
-The console application uses a Worker class to orchestrate the Use Cases execution.
+The console application Program class acts as a Worker that executes the Use Case.
 
 ### Dependency Injection
 
-The Worker class calls the Use Cases based on interfaces that are injecteds by Dependence Injection.
+The project uses Dependence Injection to build the container services and uses self-installers to add each Use Case on the container independently.
 
 ## Configuration
 
