@@ -10,30 +10,33 @@ public static class InstallerExtensions
 {
     public static IServiceCollection InstallServices(this IServiceCollection services)
     {
-        var installers = Assembly.GetExecutingAssembly().GetTypes()
-            .Where(type => type.IsClass && typeof(IServiceInstaller).IsAssignableFrom(type));
+        var installersTypes = Assembly.GetExecutingAssembly().GetTypes()
+            .Where(type => typeof(IServiceInstaller).IsAssignableFrom(type) && type.IsClass);
 
-        foreach (var installer in installers)
+        foreach (var type in installersTypes)
         {
-            var serviceInstaller = (IServiceInstaller)Activator.CreateInstance(installer)!;
-            serviceInstaller.InstallServices(services);
+            var installer = (IServiceInstaller)Activator.CreateInstance(type)!;
+            installer.InstallServices(services);
         }
         return services;
     }
 
-    public static IServiceCollection AddSingletonWithValidation<TInterface, TUseCase>(
-        this IServiceCollection services, Func<TUseCase, TInterface> getValidationInstance)
-        where TInterface: class where TUseCase: class, TInterface
-    {
-        return services
-            .AddSingleton<TUseCase>()
-            .AddSingleton<TInterface>(provider =>
-            {
-                var instance = provider.GetRequiredService<TUseCase>();
-                return getValidationInstance(instance);
-            });
-    }
-
     public static T GetService<T>(this IServiceCollection services) =>
         services.BuildServiceProvider().GetService<T>()!;
+
+    public static IServiceCollection AddSingletonWithValidation<TInterface, TUseCase>(
+        this IServiceCollection services, Func<TUseCase, TInterface> getValidation)
+        where TInterface: class where TUseCase: class, TInterface =>
+            services
+                .AddSingleton<TUseCase>()
+                .AddSingleton<TInterface>(provider =>
+                    getValidation(provider.GetRequiredService<TUseCase>()));
+
+    public static IServiceCollection AddSingletonWithValidation<TInterface, TUseCase>(
+        this IServiceCollection services, Func<TUseCase, IServiceProvider, TInterface> getValidation)
+        where TInterface: class where TUseCase: class, TInterface =>
+            services
+                .AddSingleton<TUseCase>()
+                .AddSingleton<TInterface>(provider =>
+                    getValidation(provider.GetRequiredService<TUseCase>(), provider));
 }

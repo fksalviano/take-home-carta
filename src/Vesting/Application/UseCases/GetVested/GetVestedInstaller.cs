@@ -12,7 +12,7 @@ public class GetVestedInstaller : IServiceInstaller
     public void InstallServices(IServiceCollection services)
     {
         services
-            .AddSingletonWithValidation<IGetVestedUseCase, GetVestedUseCase>(useCase => 
-                    new GetVestedUseCaseValidation(useCase));
+            .AddSingletonWithValidation<IGetVestedUseCase, GetVestedUseCase>(useCase =>
+                new GetVestedUseCaseValidation(useCase));
     }
 }

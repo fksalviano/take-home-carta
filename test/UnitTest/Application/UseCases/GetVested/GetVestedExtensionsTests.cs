@@ -68,7 +68,7 @@ public class GetVestedExtensionsTests
         input.Should().Match<GetVestedInput>(input => 
             input.FileName == null ||
             input.Date == null ||
-            input.Digits == 0);
+            input.Digits == null);
     }
 
     public static object[] InvalidArgumentsData() => new object[]
